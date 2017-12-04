@@ -9,17 +9,25 @@
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-	<div class="container">
-		<h2>Flask Web Form</h2>
+	<div class="container" style = "float:left">
+		<h2>Tag Recommender system</h2>
 		<form  action="{{ url_for('move_forward') }}" method="post">
 			<div class="form-group">
 				<label for="name">Enter the title for the new video:</label>
-				<input type="text" class="form-control" id="name" name="name" placeholder="Enter new title">{{user_input}}
-			<br>
+				<input type="text" class="form-control" id="video_name" name="video_name" placeholder="Enter title" value = "{{video_name}}"><br><br>
+				<label for="name">Channel title:</label>
+				<input type="text" class="form-control" id="channel_title" name="channel_title" placeholder="Enter channel" value = "{{channel_title}}"><br><br>
+				<label for="name">Video category:</label>
+				<input type="text" class="form-control" id="video_category" name="video_category" placeholder="Enter video category" value = "{{video_category}}"><br><br>
+				<label for="name">Video description:</label>
+				<input type="text" class="form-control" id="description" name="description" placeholder="Enter video description" value = "{{description}}"></input><br><br>
 			</div>
-			<input type="submit" class="btn btn-success">Get tags!</input>
+			<input type="submit" class="btn btn-success" value = "Get tags!"</input><br>
 			{% if recommendation != null %}
-					<li>{{recommendation}}</li>
+			<h4>The suggested tags for this video are:</h4>
+				{%for elem in recommendation%}
+					<li>{{elem[0]}}</li>
+				{% endfor %}
 			{% endif %}
 		  </form>
 	</body>
