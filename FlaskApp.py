@@ -41,15 +41,5 @@ def move_forward():
         return render_template('form.html', video_name = video_name, channel_title = channel_title, video_category = video_category, description = description, recommendation = recommend_tags)
 
 
-@app.route("/tuna/<username>")
-def tuna(username):
-    return "Hey there, %s" % username
-
-
-@app.route("/tuna/<int:post_id>")
-def tuna_post(post_id):
-    return "Post ID:, %s" % post_id
-
-
 if __name__ == '__main__':
     app.run(debug = True)
