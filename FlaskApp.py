@@ -14,26 +14,41 @@ class ReusableForm(Form):
 
 @app.route('/', methods = ['GET', 'POST'])
 def print_form():
-	return render_template('form.html')
+    return render_template('form.html')
 
 
 @app.route("/forward/", methods=['POST'])
 def move_forward():
     #Moving forward code
     if request.method == 'POST':
-    	user_input = request.form['name']
-    	x = rec.helper()
-    	return render_template('form.html', user_input = user_input, recommendation = x)
+        
+        video_name = request.form['video_name']
+        channel_title = request.form['channel_title']
+        video_category = request.form['video_category']
+        description = request.form['description']
+
+        print(video_name)
+        if video_name is None:
+            video_name = ""
+        if channel_title is None:
+            channel_title = ""
+        if video_category is None:
+            video_category = ""
+        if description is None:
+            description = ""
+        recommend_tags = rec.initializeAndFetchRecommendations(video_name, channel_title, video_category, description)
+        print("\n\n", recommend_tags)
+        return render_template('form.html', video_name = video_name, channel_title = channel_title, video_category = video_category, description = description, recommendation = recommend_tags)
 
 
 @app.route("/tuna/<username>")
 def tuna(username):
-	return "Hey there, %s" % username
+    return "Hey there, %s" % username
 
 
 @app.route("/tuna/<int:post_id>")
 def tuna_post(post_id):
-	return "Post ID:, %s" % post_id
+    return "Post ID:, %s" % post_id
 
 
 if __name__ == '__main__':
