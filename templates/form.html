@@ -9,7 +9,7 @@
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-	<div class="container" style = "float:left">
+	<div class="container">
 		<h2>Tag Recommender system</h2>
 		<form  action="{{ url_for('move_forward') }}" method="post">
 			<div class="form-group">
@@ -26,7 +26,7 @@
 			{% if recommendation != null %}
 			<h4>The suggested tags for this video are:</h4>
 				{%for elem in recommendation%}
-					<li>{{elem[0]}}</li>
+					<strong> #{{elem[0]}} </strong> &emsp;
 				{% endfor %}
 			{% endif %}
 		  </form>
