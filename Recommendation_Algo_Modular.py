@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[46]:
 
 
 import pandas as pd
@@ -14,14 +14,14 @@ import gensim
 import math
 
 
-# In[2]:
+# In[47]:
 
 
 global AVG_TAGS_PER_VIDEO, US_CA_GB_TOKEN_CORPUS, US_VIDEOS_DF, US_FINAL_DF
 global CA_VIDEOS_DF, CA_FINAL_DF, GB_VIDEOS_DF, GB_FINAL_DF, US_CA_GB_FINAL_DF
 
 
-# In[3]:
+# In[48]:
 
 
 #get rid of the punctuations and set all characters to lowercase
@@ -37,13 +37,13 @@ RE_PREPROCESS = r'\W+|\d+' #the regular expressions that matches all non-charact
 #once this list has been filed it is then stored in a numpy array
 
 
-# In[4]:
+# In[49]:
 
 
 RE_REMOVE_URLS = r'http\S+'
 
 
-# In[5]:
+# In[50]:
 
 
 def processFeatures(desc):
@@ -54,7 +54,7 @@ def processFeatures(desc):
         return " "
 
 
-# In[6]:
+# In[51]:
 
 
 def processDataFrame(data_frame, country_code='US'):
@@ -101,7 +101,7 @@ def processDataFrame(data_frame, country_code='US'):
     return final_df
 
 
-# In[7]:
+# In[52]:
 
 
 def removeNonEngAndStopwords(documents):
@@ -120,7 +120,7 @@ def removeNonEngAndStopwords(documents):
     return processed_corpus
 
 
-# In[8]:
+# In[53]:
 
 
 def processCorpus(feature_corpus):
@@ -129,7 +129,7 @@ def processCorpus(feature_corpus):
     return processed_feature_corpus
 
 
-# In[9]:
+# In[54]:
 
 
 def trainModel(token_corpus, model_name = 'word2vec_model.w2v'):
@@ -139,7 +139,7 @@ def trainModel(token_corpus, model_name = 'word2vec_model.w2v'):
     return model
 
 
-# In[19]:
+# In[55]:
 
 
 def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_of_tags = 10, model_name = 'word2vec_model.w2v'):
@@ -169,7 +169,7 @@ def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_o
     return tags
 
 
-# In[20]:
+# In[56]:
 
 
 def calculateAvgTagsPerVideo():
@@ -181,7 +181,7 @@ def calculateAvgTagsPerVideo():
 
 # Running the algorithm for US, CA, and GB videos
 
-# In[21]:
+# In[57]:
 
 
 def initializeAndFetchRecommendations(video_name = None, channel_title = None, video_category = None, description = None):
@@ -224,4 +224,38 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
                          model_name = 'word2vec_model.w2v')
 
 
-# In[22]:
+
+
+# In[58]:
+
+
+recommendations = initializeAndFetchRecommendations()
+
+
+# In[59]:
+
+
+recommendations
+
+
+# In[60]:
+
+
+the_file = open("recommendations.txt","w+")
+for recommendation in recommendations:
+    the_file.write(recommendation[0] + ' ')
+the_file.close()
+
+
+# In[61]:
+
+
+initializeAndFetchRecommendations(video_name = 'What is data science',
+                                  channel_title = 'CNN',
+                                  video_category = 'Education',
+                                  description = 'data science related')
+
+
+# ## Dividing the dataset into training (80%) and testing sets (20%).
+
+# In[62]:
