@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[25]:
+# In[1]:
 
 
 import pandas as pd
@@ -14,14 +14,14 @@ import gensim
 import math
 
 
-# In[26]:
+# In[2]:
 
 
 global AVG_TAGS_PER_VIDEO, US_CA_GB_TOKEN_CORPUS, US_VIDEOS_DF, US_FINAL_DF
 global CA_VIDEOS_DF, CA_FINAL_DF, GB_VIDEOS_DF, GB_FINAL_DF, US_CA_GB_FINAL_DF
 
 
-# In[27]:
+# In[3]:
 
 
 #get rid of the punctuations and set all characters to lowercase
@@ -37,13 +37,13 @@ RE_PREPROCESS = r'\W+|\d+' #the regular expressions that matches all non-charact
 #once this list has been filed it is then stored in a numpy array
 
 
-# In[28]:
+# In[4]:
 
 
 RE_REMOVE_URLS = r'http\S+'
 
 
-# In[29]:
+# In[5]:
 
 
 def processFeatures(desc):
@@ -54,7 +54,7 @@ def processFeatures(desc):
         return " "
 
 
-# In[30]:
+# In[6]:
 
 
 def processDataFrame(data_frame, country_code='US'):
@@ -101,49 +101,56 @@ def processDataFrame(data_frame, country_code='US'):
     return final_df
 
 
-# In[31]:
+# In[7]:
 
 
-def removeStopwords(documents):
+def removeNonEngAndStopwords(documents):
     stopwords_list = stopwords.words('english')
     processed_corpus = []
     for document in documents:
         processed_document = []
         for word in document.split():
-            if word not in stopwords_list:
-                processed_document.append(word)
+            try:
+                if word not in stopwords_list and word.encode(encoding='utf-8').decode('ascii'):
+                    processed_document.append(word)
+            except UnicodeDecodeError:
+                # Can log something here
+                pass
         processed_corpus.append(processed_document)
     return processed_corpus
 
 
-# In[32]:
+# In[8]:
 
 
 def processCorpus(feature_corpus):
     feature_corpus = [comment.lower() for comment in feature_corpus]
-    processed_feature_corpus = removeStopwords(feature_corpus)
+    processed_feature_corpus = removeNonEngAndStopwords(feature_corpus)
     return processed_feature_corpus
 
 
-# In[33]:
+# In[26]:
 
 
-def trainModel(token_corpus):
+def trainModel(token_corpus, model_name = 'word2vec_model.w2v'):
     model = gensim.models.Word2Vec(sentences=token_corpus, min_count=1, size = 32)
     model.train(token_corpus, total_examples=model.corpus_count, epochs=model.iter)
-    model.save('word2vec_model.w2v')
+    model.save(model_name)
     return model
 
 
-# In[34]:
+# In[31]:
 
 
 def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_of_tags = 10, model_name = 'word2vec_model.w2v'):
     global US_CA_GB_TOKEN_CORPUS
     tags = []
-    if word2vec_model is None:
-        gensim.models.Word2Vec.load(model_name)
+
     try:
+        word2vec_model = gensim.models.Word2Vec.load(model_name)
+        tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
+    except FileNotFoundError:
+        word2vec_model = trainModel(US_CA_GB_TOKEN_CORPUS, model_name)
         tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
     except:
         US_CA_GB_TOKEN_CORPUS.append(input_words)
@@ -155,7 +162,7 @@ def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_o
     return tags
 
 
-# In[35]:
+# In[32]:
 
 
 def calculateAvgTagsPerVideo():
@@ -167,7 +174,7 @@ def calculateAvgTagsPerVideo():
 
 # Running the algorithm for US, CA, and GB videos
 
-# In[58]:
+# In[33]:
 
 
 def initializeAndFetchRecommendations(video_name = None, channel_title = None, video_category = None, description = None):
@@ -190,7 +197,7 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
     US_CA_GB_FINAL_DF['video_corpus'] = US_CA_GB_TOKEN_CORPUS
 
     AVG_TAGS_PER_VIDEO = calculateAvgTagsPerVideo()
-    word2vec_model = trainModel(US_CA_GB_TOKEN_CORPUS)
+    word2vec_model = None
 
     input_list = []
     if (video_name is not None or channel_title is not None or
@@ -208,6 +215,3 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
     return recommendTags(word2vec_model, input_words=['trump', 'president'],
                          number_of_tags=AVG_TAGS_PER_VIDEO,
                          model_name = 'word2vec_model.w2v')
-
-
-# In[60]:
