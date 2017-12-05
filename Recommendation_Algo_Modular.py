@@ -129,7 +129,7 @@ def processCorpus(feature_corpus):
     return processed_feature_corpus
 
 
-# In[26]:
+# In[9]:
 
 
 def trainModel(token_corpus, model_name = 'word2vec_model.w2v'):
@@ -139,7 +139,7 @@ def trainModel(token_corpus, model_name = 'word2vec_model.w2v'):
     return model
 
 
-# In[31]:
+# In[19]:
 
 
 def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_of_tags = 10, model_name = 'word2vec_model.w2v'):
@@ -151,7 +151,14 @@ def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_o
         tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
     except FileNotFoundError:
         word2vec_model = trainModel(US_CA_GB_TOKEN_CORPUS, model_name)
-        tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
+        try:
+            tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
+        except:
+            US_CA_GB_TOKEN_CORPUS.append(input_words)
+            word2vec_model.build_vocab(US_CA_GB_TOKEN_CORPUS, update=True)
+            word2vec_model.train(US_CA_GB_TOKEN_CORPUS, total_examples=word2vec_model.corpus_count, epochs=word2vec_model.iter)
+            word2vec_model.save(model_name)
+            tags = word2vec_model.most_similar(positive=input_words, topn=number_of_tags)
     except:
         US_CA_GB_TOKEN_CORPUS.append(input_words)
         word2vec_model.build_vocab(US_CA_GB_TOKEN_CORPUS, update=True)
@@ -162,7 +169,7 @@ def recommendTags(word2vec_model, input_words = ['trump', 'president'], number_o
     return tags
 
 
-# In[32]:
+# In[20]:
 
 
 def calculateAvgTagsPerVideo():
@@ -174,7 +181,7 @@ def calculateAvgTagsPerVideo():
 
 # Running the algorithm for US, CA, and GB videos
 
-# In[33]:
+# In[21]:
 
 
 def initializeAndFetchRecommendations(video_name = None, channel_title = None, video_category = None, description = None):
@@ -205,7 +212,7 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
         frontEndInput = video_name + channel_title + video_category + description
         for word in frontEndInput.split(' '):
             if word not in stopwords.words('english'):
-                input_list.append(word)
+                input_list.append(word.lower())
 
     if input_list != []:
         return recommendTags(word2vec_model, input_words=input_list,
@@ -215,3 +222,6 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
     return recommendTags(word2vec_model, input_words=['trump', 'president'],
                          number_of_tags=AVG_TAGS_PER_VIDEO,
                          model_name = 'word2vec_model.w2v')
+
+
+# In[22]:
