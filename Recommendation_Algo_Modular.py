@@ -209,7 +209,7 @@ def initializeAndFetchRecommendations(video_name = None, channel_title = None, v
     input_list = []
     if (video_name is not None or channel_title is not None or
         video_category is not None or description is not None):
-        frontEndInput = video_name + channel_title + video_category + description
+        frontEndInput = frontEndInput = video_name + ' ' + channel_title + ' ' +  video_category + ' ' + description + ' '
         for word in frontEndInput.split(' '):
             if word not in stopwords.words('english'):
                 input_list.append(word.lower())
