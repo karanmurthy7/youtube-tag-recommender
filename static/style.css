@@ -1,11 +1,26 @@
-.container {
-    width: 800px;
-    height: 500px;
-    background-color: #cccccc;;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
+h1 {
+    /*color: white;*/
+    font-family: verdana;
+    font-size: 200%;
+    text-align: center;
+    color: grey;
 }
+p  {
+    color: red;
+    font-family: courier;
+    font-size: 160%;
+}
+body{
+    background-image: url("tag.jpg");
+}
+
+label{
+	color: grey;	
+	font-weight: bold;
+    font-size: 18px;
+    width: 413px;
+    text-align: right;
+    float: left;
+    padding-right: 20px;
+}
+

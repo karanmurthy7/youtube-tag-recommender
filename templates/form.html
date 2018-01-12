@@ -1,16 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!docType html>
 <html>
 	<head>
 		<title>Reusable Form Demo</title>
 		<link rel="stylesheet" media="screen" href ="static/bootstrap.min.css">
 		<link rel="stylesheet" href="static/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="static/bootstrap-theme.min.css">
-		<link rel="stylesheet" type = "text/css" href="{{url_for('static', filename = 'style.css')}}">
+		<link rel="stylesheet" type = "text/css" href="{{url_for('static', filename = 'Style.css')}}">
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
 	</head>
 	<body>
 	<div class="container">
-		<h2>Tag Recommender system</h2>
+		<h1>Tag Recommender system</h1>
 		<form  action="{{ url_for('move_forward') }}" method="post">
 			<div class="form-group">
 				<label for="name">Enter the title for the new video:</label>
@@ -22,7 +22,7 @@
 				<label for="name">Video description:</label>
 				<input type="text" class="form-control" id="description" name="description" placeholder="Enter video description" value = "{{description}}"></input><br><br>
 			</div>
-			<input type="submit" class="btn btn-success" value = "Get tags!"</input><br>
+			<input type="submit" class="btn btn-success" style = "width:180px; margin-left: 350px;" value = "Get tags"</input><br>
 			{% if recommendation != null %}
 			<h4>The suggested tags for this video are:</h4>
 				{%for elem in recommendation%}

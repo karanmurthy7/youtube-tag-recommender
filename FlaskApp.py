@@ -38,7 +38,9 @@ def move_forward():
             description = ""
         recommend_tags = rec.initializeAndFetchRecommendations(video_name, channel_title, video_category, description)
         print("\n\n", recommend_tags)
-        return render_template('form.html', video_name = video_name, channel_title = channel_title, video_category = video_category, description = description, recommendation = recommend_tags)
+        return render_template('form.html', video_name = video_name, channel_title = channel_title, 
+                                            video_category = video_category, description = description,
+                                            recommendation = recommend_tags)
 
 
 if __name__ == '__main__':
